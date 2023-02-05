@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer card</title>
+</head>
+<body>
+
+<p th:text="${customers.getName() + ', ' + customers.getAge()}">VALUE</p>
+<p th:text="${customers.getCustomerid()}">VALUE</p>
+
+<a th:href="@{/customers/{id}/edit(id=${customers.getCustomerid()})}">Edit</a>
+
+
+
+<div th:if="${books.size()==0}">
+    <div>No books taken</div>
+</div>
+
+<div th:if="${books.size()>0}">
+    <div>Books taken:</div>
+</div>
+
+<div th:each="book : ${books}">
+    <a th:if="${book.getTakenAt().getTime()<lastValidDate}"
+       style="color: red"
+       th:href="@{/books/{id}(id=${book.getBookid()})}"
+       th:text="${book.getName() + ', ' + book.getAuthor()}">about</a>
+    <a th:if="${book.getTakenAt().getTime()>=lastValidDate}"
+       th:href="@{/books/{id}(id=${book.getBookid()})}"
+       th:text="${book.getName() + ', ' + book.getAuthor()}">about</a>
+</div>
+
+<form th:method="DELETE" th:action="@{/customers/{id}(id=${customers.getCustomerid()})}">
+    <input type="submit" value="Delete"/>
+</form>
+
+<div>
+    <a href="/">Menu</a>
+</div>
+
+</body>
+</html>

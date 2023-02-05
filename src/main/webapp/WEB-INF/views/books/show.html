@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book card</title>
+</head>
+<body>
+
+<p th:text="${'Book name: '+books.getName() + ', Author: ' + books.getAuthor()}">VALUE</p>
+<p th:text="${'Book id: '+books.getBookid()}">VALUE</p>
+<a th:href="@{/books/{id}/edit(id=${books.getBookid()})}">Edit book</a>
+
+<br/>
+
+<div th:if="${customerTaken!=null}">
+
+    <p th:text="${'Taken by '+customerTaken.getName() + ', ' + customerTaken.getAge()+' taken '+customerTaken.getCustomerid()}">VALUE</p>
+
+    <div>
+        <form th:method="PATCH" th:action="@{/books/{id}/release(id=${books.getBookid()})}" th:object="${books}">
+            <input type="hidden" th:field="*{name}" th:attr="value = ${books.name}"/>
+            <input type="hidden" th:field="*{author}" th:attr="value = ${books.author}"/>
+            <input type="hidden" th:field="*{taken}" th:attr="value = -1"/>
+            <input type="submit" value="Return book to library"/>
+        </form>
+    </div>
+</div>
+
+<div th:if="${customerTaken==null}">
+    <div>nope</div>
+    <form th:method="PATCH" th:action="@{/books/{id}/setowner(id=${books.getBookid()})}">
+        <label for="customer">Select customer</label>
+        <select th:object="${customer}" th:field="*{customerid}" id="customer">
+            <option th:each="customer : ${customers}" th:value="${customer.getCustomerid()}"
+                    th:text="${customer.getName()}"></option>
+        </select>
+        <input type="submit" value="Assign">
+    </form>
+</div>
+
+<br/>
+
+<form th:method="DELETE" th:action="@{/books/{id}(id=${books.getBookid()})}">
+    <input type="submit" value="Delete book"/>
+</form>
+
+<div>
+    <a href="/">Menu</a>
+</div>
+
+</body>
+</html>
